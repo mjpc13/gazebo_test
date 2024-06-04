@@ -1,0 +1,2 @@
+Convert Xacro in URDF:
+`rosrun xacro xacro model.urdf.xacro > model.urdf`

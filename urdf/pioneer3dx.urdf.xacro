@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="pioneer3dx">
+
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+
+  <!-- Import Rviz colors -->
+  <xacro:include filename="$(find gazebo_test)/urdf/materials.xacro" />
+
+  <!-- Import robot -->
+  <xacro:include filename="$(find amr_robots_description)/urdf/pioneer3dx.urdf.xacro"/>
+  <!--<xacro:pioneer3dx_body name="chassis" parent="base_link" meshes="package://p3dx_description/meshes/p3dx"/>-->
+
+   <!-- Adicionando a câmera Intel RealSense D435i-->
+  <xacro:include filename="$(find gazebo_test)/urdf/_d435i.urdf.xacro" />
+  <xacro:sensor_d435i name="camera" parent="base_link" meshes="package://gazebo_test/meshes/sensors" topics_ns="Pionner/D435i_camera" unite_imu_method="linear_interpolation" enable_pointCloud="true" align_depth="true">
+    <origin xyz="0.13 0 0.265" rpy="0 0 0"/>
+  </xacro:sensor_d435i>
+
+</robot>

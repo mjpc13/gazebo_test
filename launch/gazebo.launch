@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="world" default="$(find gazebo_test)/worlds/office/office_part1/service.world"/>
+    <param name="use_sim_time" value="true"/>
+    <env name="GAZEBO_MODEL_PATH" value="$GAZEBO_MODEL_PATH:$(find gazebo_test)/worlds/office/office_part1/models:$(find amr_robots_gazebo)/models" />
+    <env name="GAZEBO_RESOURCE_PATH" value="$GAZEBO_RESOURCE_PATH:$(find gazebo_test)/worlds/office/office_part1/models:$(find amr_robots_gazebo)/models" />
+
+
+      <!-- Robot pose -->
+  <arg name="initial_pose_x" default="2.0"/>
+  <arg name="initial_pose_y" default="2.0"/>
+  <arg name="initial_pose_a" default="0"/>
+
+
+  <!--<arg name="urdf" default="$(find amr_robots_description)/urdf/pioneer3dx.urdf" />-->
+
+  <arg name="urdf" default="$(find gazebo_test)/urdf/model.urdf" />
+
+  <arg name="name" default="pioneer3dx" />
+  <param name="robot_description" command="$(find xacro)/xacro $(arg urdf)" />
+
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="
+    -x $(arg initial_pose_x)
+    -y $(arg initial_pose_y)
+    -Y $(arg initial_pose_a)
+    -param robot_description -urdf -model $(arg name)" />
+
+
+
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world)"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+</launch>

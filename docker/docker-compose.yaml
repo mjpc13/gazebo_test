@@ -1,0 +1,49 @@
+version: "3.2"
+
+#Create a network that links containers
+services:
+  novnc:
+    image: theasp/novnc:latest
+    networks:
+      - vnc-net
+    environment:
+      - DISPLAY_WIDTH=1920
+      - DISPLAY_HEIGHT=1080
+      - RUN_XTERM=no
+    ports:
+      - 7171:8080
+    container_name: viz
+
+  gazebo-image:
+    image: test-gazebo:latest
+    #build:
+    #  context: .
+    #  dockerfile: Dockerfile
+    container_name: gz-server
+    privileged: true
+    # network_mode: "host"
+    networks:
+      - vnc-net
+    volumes:
+      - type: bind
+        source: ../../gazebo_test/
+        target: /app/catkin_ws/src/gazebo_test
+      - type: bind
+        source: $HOME/.ros/
+        target: /root/.ros
+    environment:
+        - DISPLAY=novnc:0.0
+    stdin_open: true
+    tty: true
+    command: roscore
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+
+networks:
+  vnc-net:
